@@ -6,6 +6,10 @@ The main UI looks as follows:
 
 ![](main.png)
 
+## Requirements
+
+[.NET 7 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
+
 ## How-To
 
 1. Enter the required maximum XP number (the game's default is 420000);
