@@ -10,7 +10,7 @@
     xmlns:local="clr-namespace:BG3_XP_Table_Generator"
     Width="1000"
     Height="800"
-    Title="MainWindow">
+    Title="Generator">
     <dx:ThemedWindow.DataContext>
         <local:ViewModel />
     </dx:ThemedWindow.DataContext>
