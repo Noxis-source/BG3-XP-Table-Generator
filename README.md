@@ -11,7 +11,7 @@ The main UI looks as follows:
 1. Enter the required maximum XP number (the game's default is 420000);
 2. Enter the required number of levels (the game's default is 12);
 3. Click Generate;
-4. Analyze generated data. You can adjust numbers in the grid if something looks off;
+4. Analyze generated data. You can adjust numbers in the grid if something looks off (**early levels especially**);
 4. Click Export and select an export location.
 
 You'll find two generated files in the set location.
