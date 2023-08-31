@@ -64,14 +64,12 @@
         <dxc:ChartControl Grid.Row="1" Grid.ColumnSpan="2">
             <dxc:ChartControl.Diagram>
                 <dxc:XYDiagram2D>
-                    <dxc:BarSideBySideSeries2D
+                    <dxc:LineSeries2D
                         ArgumentDataMember="Level"
                         DataSource="{Binding XPDataRecords}"
-                        ValueDataMember="XP">
-                        <dxc:BarSideBySideSeries2D.Indicators>
-                            <dxc:TrendLine />
-                        </dxc:BarSideBySideSeries2D.Indicators>
-                    </dxc:BarSideBySideSeries2D>
+                        LabelsVisibility="True"
+                        MarkerVisible="True"
+                        ValueDataMember="XP" />
                 </dxc:XYDiagram2D>
             </dxc:ChartControl.Diagram>
         </dxc:ChartControl>
