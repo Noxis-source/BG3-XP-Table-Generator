@@ -1,15 +1,13 @@
 ﻿using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
-using DevExpress.Mvvm.Native;
-using DevExpress.Utils.About;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+using System.Windows;
+using System.Windows.Resources;
 
 namespace BG3_XP_Table_Generator {
     public class ViewModel : ViewModelBase {
@@ -47,7 +45,7 @@ namespace BG3_XP_Table_Generator {
                     Directory.CreateDirectory(Path.Combine(FolderBrowserDialogService.ResultPath, StatsFolderPath, DataFolderPath, GeneratedFolderPath));
 
                 using (var treasureStream = File.Create(Path.Combine(FolderBrowserDialogService.ResultPath, StatsFolderPath, DataFolderPath, TreasureTablePath))) {
-                    var treasureString = File.ReadAllText("TreasureTable.txt").Replace("EndLevel \"\"", $"EndLevel \"{XPData.MaxLvl}\"");
+                    var treasureString = XPData.TREASURE_TABLE.Replace("EndLevel \"\"", $"EndLevel \"{XPData.MaxLvl}\"");
                     var info = new UTF8Encoding(true).GetBytes(treasureString);
                     treasureStream.Write(info, 0, info.Length);
                 }
