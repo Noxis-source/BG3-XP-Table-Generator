@@ -11,6 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="GeneratorData\**" />
+    <EmbeddedResource Remove="GeneratorData\**" />
+    <None Remove="GeneratorData\**" />
+    <Page Remove="GeneratorData\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DevExpress.Wpf.Core" Version="23.1.4" />
     <PackageReference Include="DevExpress.Wpf.Themes.Win11Dark" Version="23.1.4" />
 	<PackageReference Include="DevExpress.Wpf.LayoutControl" Version="23.1.4" />
@@ -19,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GeneratorData\GeneratorData.csproj" />
+    <ProjectReference Include="GeneratorData\GeneratorData.csproj" />
   </ItemGroup>
 
   <ItemGroup>
