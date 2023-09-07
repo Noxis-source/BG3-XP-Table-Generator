@@ -2,16 +2,15 @@
 using GeneratorData;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BG3_XP_Table_Generator {
     public class XPData : BindableBase {
-        const int DEFAULT_MaxXP = 100000;
-        const int DEFAULT_MinLvl = 1;
-        const int DEFAULT_MaxLvl = 12;
-
         public const string TREASURE_TABLE =
 @"new treasuretable ""ST_Gold_Trader_Part""
 new subtable ""5,1""
@@ -105,27 +104,61 @@ object category ""I_BOOK_GLO_Alchemy_SuperiorPotionHealing"",1,0,0,0,0,0,0,0
 object category ""I_BOOK_GLO_Alchemy_WyvernToxin"",1,0,0,0,0,0,0,0
 object category ""I_BOOK_Alchemy_ExtractTypes"",1,0,0,0,0,0,0,0";
 
+        [Display(Name = "Maximum XP", GroupName = "Basic Parameters")]
         public double MaxXP { get => GetValue<double>(); set => SetValue(value); }
+        [Display(Name = "Minimum Level", GroupName = "Basic Parameters")]
         public int MinLvl { get => GetValue<int>(); set => SetValue(value); }
+        [Display(Name = "Maximum Level", GroupName = "Basic Parameters")]
         public int MaxLvl { get => GetValue<int>(); set => SetValue(value); }
+        [Display(Name = "Progression Type", GroupName = "Basic Parameters")]
         public ProgressionType Progression { get => GetValue<ProgressionType>(); set => SetValue(value); }
+        [Display(Name = "Custom Increment", GroupName = "Custom Parameters")]
+        public double CustomIncrement { get => GetValue<double>(); set => SetValue(value); }
+        [Display(Name = "Custom Factor", GroupName = "Custom Parameters")]
+        public double CustomFactor { get => GetValue<double>(); set => SetValue(value); }
+        [Display(Name = "Custom Start Value", GroupName = "Custom Parameters")]
+        public double CustomStartValue { get => GetValue<double>(); set => SetValue(value); }
+        public ObservableCollection<XPDataRecord> XPDataRecords { get => GetValue<ObservableCollection<XPDataRecord>>(); set => SetValue(value); }
 
         public XPData() {
-            MaxXP = DEFAULT_MaxXP;
-            MinLvl = DEFAULT_MinLvl;
-            MaxLvl = DEFAULT_MaxLvl;
+            MaxXP = 100000;
+            MinLvl = 1;
+            MaxLvl = 12;
             Progression = ProgressionType.Linear;
+            CustomStartValue = 150.0d;
+            CustomIncrement = 100.0d;
+            CustomFactor = 1.5d;
+            XPDataRecords = new ObservableCollection<XPDataRecord>();
         }
 
-        public void GenerateData(ICollection<XPDataRecord> source) {
-            if (Progression == ProgressionType.Linear) {
-                double limit = MaxLvl + 1;
-                double sum = (limit - 1) * (limit / 2.0d);
-                double root = MaxXP / sum;
+        public void GenerateData() {
+            XPDataRecords.Clear();
 
-                for (int i = MinLvl; i < limit; i++)
-                    source.Add(new XPDataRecord(i, Convert.ToInt32(i * root)));
+            switch (Progression) {
+                case ProgressionType.Linear:
+                    for (int i = MinLvl; i < MaxLvl; i++)
+                        XPDataRecords.Add(new XPDataRecord(i, Convert.ToInt32(i * (MaxXP / (MaxLvl * ((MaxLvl + 1) / 2.0d))))));
+                    XPDataRecords.Add(new XPDataRecord(MaxLvl, Convert.ToInt32(MaxXP - XPDataRecords.Sum(x => x.XP))));
+                    break;
+                case ProgressionType.Exponential:
+                    for (int i = MinLvl; i < MaxLvl; i++)
+                        XPDataRecords.Add(new XPDataRecord(i, Convert.ToInt32(MaxXP * (Math.Pow(2.0, i)) / Math.Pow(2.0, MaxLvl + 1))));
+                    XPDataRecords.Add(new XPDataRecord(MaxLvl, Convert.ToInt32(MaxXP - XPDataRecords.Sum(x => x.XP))));
+                break;
+                case ProgressionType.Quadratic:
+                    for (int i = MinLvl; i < MaxLvl; i++)
+                        XPDataRecords.Add(new XPDataRecord(i, Convert.ToInt32(MaxXP * (2.0 + Math.Pow(i - 1, 2)) / ((MaxLvl* (MaxLvl - 1) * (2 * MaxLvl - 1)) / 6))));
+                    XPDataRecords.Add(new XPDataRecord(MaxLvl, Convert.ToInt32(MaxXP - XPDataRecords.Sum(x => x.XP))));
+                break;
+                case ProgressionType.Custom:
+                    XPDataRecords.Add(new XPDataRecord(MinLvl, Convert.ToInt32(CustomStartValue)));
+                    for (int i = MinLvl + 1; i < MaxLvl; i++)
+                        XPDataRecords.Add(new XPDataRecord(i, Convert.ToInt32(XPDataRecords.ElementAt(i - 2).XP * CustomFactor + CustomIncrement)));
+                    XPDataRecords.Add(new XPDataRecord(MaxLvl, Convert.ToInt32(MaxXP - XPDataRecords.Sum(x => x.XP))));
+                    break;
             }
+
+            RaisePropertyChanged(nameof(XPDataRecords));
         }
     }
 }

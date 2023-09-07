@@ -2,12 +2,15 @@
     x:Class="BG3_XP_Table_Generator.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:BG3_XP_Table_Generator.Behaviors"
+    xmlns:converters="clr-namespace:BG3_XP_Table_Generator.Converters"
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
     xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:local="clr-namespace:BG3_XP_Table_Generator"
+    xmlns:services="clr-namespace:BG3_XP_Table_Generator.Services"
     Width="1000"
     Height="800"
     Title="Generator">
@@ -16,6 +19,7 @@
     </dx:ThemedWindow.DataContext>
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:FolderBrowserDialogService />
+        <services:ExportService />
     </dxmvvm:Interaction.Behaviors>
     <Grid>
         <Grid.RowDefinitions>
@@ -27,7 +31,11 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <StackPanel>
-            <dxlc:DataLayoutControl CurrentItem="{Binding XPData}" />
+            <dxlc:DataLayoutControl CurrentItem="{Binding XPData}" ItemUpdateSourceTrigger="PropertyChanged">
+                <dxmvvm:Interaction.Behaviors>
+                    <behaviors:DataLayoutControlGeneratorBehavior />
+                </dxmvvm:Interaction.Behaviors>
+            </dxlc:DataLayoutControl>
             <dx:SimpleButton
                 Margin="5"
                 Command="{Binding GenerateTableCommand}"
@@ -37,23 +45,33 @@
                 Command="{Binding ExportCommand}"
                 Content="Export" />
         </StackPanel>
-        <dxg:GridControl Grid.Column="1" ItemsSource="{Binding XPDataRecords}">
+        <dxg:GridControl Grid.Column="1" ItemsSource="{Binding XPData.XPDataRecords}">
             <dxg:GridControl.TotalSummary>
                 <dxg:GridSummaryItem
+                    DisplayFormat="Total XP: {0}"
                     FieldName="XP"
                     ShowInColumn="XP"
                     SummaryType="Sum" />
             </dxg:GridControl.TotalSummary>
             <dxg:GridControl.View>
                 <dxg:TableView
+                    AllowColumnMoving="False"
+                    AllowFilterEditor="False"
+                    AllowGrouping="False"
+                    AllowResizing="False"
+                    AllowSorting="False"
                     AutoWidth="True"
+                    ColumnFilterPopupMode="Disabled"
+                    EnableImmediatePosting="True"
+                    IsColumnMenuEnabled="False"
                     IsTotalSummaryMenuEnabled="False"
                     ShowGroupPanel="False"
                     ShowIndicator="False"
+                    ShowSearchPanelMode="Never"
                     TotalSummaryPosition="Bottom">
                     <dxg:TableView.FormatConditions>
                         <dxg:ColorScaleFormatCondition ApplyToRow="true" FieldName="XP">
-                            <dx:ColorScaleFormat ColorMax="#FFB07B19" ColorMin="#FF1A9C1A" />
+                            <dx:ColorScaleFormat ColorMax="#FF8A631A" ColorMin="#FF1D691D" />
                         </dxg:ColorScaleFormatCondition>
                     </dxg:TableView.FormatConditions>
                 </dxg:TableView>
@@ -64,12 +82,33 @@
         <dxc:ChartControl Grid.Row="1" Grid.ColumnSpan="2">
             <dxc:ChartControl.Diagram>
                 <dxc:XYDiagram2D>
+                    <dxc:XYDiagram2D.AxisY>
+                        <dxc:AxisY2D>
+                            <dxc:AxisY2D.Title>
+                                <dxc:AxisTitle Content="XP" />
+                            </dxc:AxisY2D.Title>
+                        </dxc:AxisY2D>
+                    </dxc:XYDiagram2D.AxisY>
+                    <dxc:XYDiagram2D.AxisX>
+                        <dxc:AxisX2D>
+                            <dxc:AxisX2D.Title>
+                                <dxc:AxisTitle Content="Level" />
+                            </dxc:AxisX2D.Title>
+                        </dxc:AxisX2D>
+                    </dxc:XYDiagram2D.AxisX>
                     <dxc:LineSeries2D
                         ArgumentDataMember="Level"
-                        DataSource="{Binding XPDataRecords}"
+                        Brush="LightSlateGray"
+                        ColorDataMember="XP"
+                        CrosshairLabelPattern="Level {A} - {V} XP"
+                        DataSource="{Binding XPData.XPDataRecords}"
                         LabelsVisibility="True"
                         MarkerVisible="True"
-                        ValueDataMember="XP" />
+                        ValueDataMember="XP">
+                        <dxc:LineSeries2D.Colorizer>
+                            <dxc:RangeColorizer Palette="{Binding XPData.XPDataRecords,Converter={converters:ProgressionToGradientConverter}}" RangeStops="{Binding XPData.XPDataRecords, Converter={converters:ProgressionToArrayConverter}}" />
+                        </dxc:LineSeries2D.Colorizer>
+                    </dxc:LineSeries2D>
                 </dxc:XYDiagram2D>
             </dxc:ChartControl.Diagram>
         </dxc:ChartControl>

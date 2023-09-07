@@ -18,11 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevExpress.Wpf.Core" Version="23.1.4" />
-    <PackageReference Include="DevExpress.Wpf.Themes.Win11Dark" Version="23.1.4" />
-	<PackageReference Include="DevExpress.Wpf.LayoutControl" Version="23.1.4" />
-	<PackageReference Include="DevExpress.Wpf.Grid" Version="23.1.4" />
-	<PackageReference Include="DevExpress.Wpf.Charts" Version="23.1.4" />
+    <PackageReference Include="DevExpress.Wpf.Core" Version="23.1.5" />
+    <PackageReference Include="DevExpress.Wpf.Themes.Win11Dark" Version="23.1.5" />
+	<PackageReference Include="DevExpress.Wpf.LayoutControl" Version="23.1.5" />
+	<PackageReference Include="DevExpress.Wpf.Grid" Version="23.1.5" />
+	<PackageReference Include="DevExpress.Wpf.Charts" Version="23.1.5" />
   </ItemGroup>
 
   <ItemGroup>
