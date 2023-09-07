@@ -1,10 +1,8 @@
 # BG3 XP Table Generator
 
-This is a simple tool that generates expereince and treasure tables (Data.txt, XPData.txt, and TreasureTable.txt) for Baldur's Gate 3 in the required format.
-
-The main UI looks as follows:
-
 ![](main.png)
+
+This is a simple tool that generates expereince and treasure tables (Data.txt, XPData.txt, and TreasureTable.txt) for Baldur's Gate 3 in the required format.
 
 ## Requirements
 
@@ -32,4 +30,4 @@ Use a packaging tool ([LSLib](https://github.com/Norbyte/lslib)) to create a mod
 
 ## P.S.
 
-This tool uses a simple and straightforward linear progression curve. If you feel like you can come up with another solution, please feel free to submit a pull request.
+This tool uses simple and straightforward progression curves. If you feel like you can come up with another solution, please feel free to submit a pull request.
