@@ -23,27 +23,27 @@ namespace BG3_XP_Table_Generator.Services
             if (!Directory.Exists(statsPath))
                 Directory.CreateDirectory(statsPath);
 
-            var dataPath = Path.Combine(statsPath, DataFolderPath);
-            if (!Directory.Exists(dataPath))
-                Directory.CreateDirectory(dataPath);
-
-            var generatedPath = Path.Combine(dataPath, GeneratedFolderPath);
+            var generatedPath = Path.Combine(statsPath, GeneratedFolderPath);
             if (!Directory.Exists(generatedPath))
                 Directory.CreateDirectory(generatedPath);
 
-            using (var treasureStream = File.Create(Path.Combine(dataPath, TreasureTablePath))) {
+            var dataPath = Path.Combine(generatedPath, DataFolderPath);
+            if (!Directory.Exists(dataPath))
+                Directory.CreateDirectory(dataPath);
+
+            using (var treasureStream = File.Create(Path.Combine(generatedPath, TreasureTablePath))) {
                 var treasureString = XPData.TREASURE_TABLE.Replace("EndLevel \"\"", $"EndLevel \"{data.MaxLvl}\"");
                 var info = new UTF8Encoding(true).GetBytes(treasureString);
                 treasureStream.Write(info, 0, info.Length);
             }
 
-            using (var dataStream = File.Create(Path.Combine(generatedPath, DataPath))) {
+            using (var dataStream = File.Create(Path.Combine(dataPath, DataPath))) {
                 var dataString = $"key \"MaximumXPCap\",\"{data.MaxXP}\"";
                 var info = new UTF8Encoding(true).GetBytes(dataString);
                 dataStream.Write(info, 0, info.Length);
             }
 
-            using (var xpDataStream = File.Create(Path.Combine(generatedPath, XPDataPath))) {
+            using (var xpDataStream = File.Create(Path.Combine(dataPath, XPDataPath))) {
                 foreach (var item in data.XPDataRecords) {
                     var xpDataString = $"key \"Level{item.Level}\",\"{item.XP}\"\r\n\r\n";
                     var info = new UTF8Encoding(true).GetBytes(xpDataString);
