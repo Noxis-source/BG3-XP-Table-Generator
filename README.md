@@ -1,5 +1,7 @@
 # BG3 XP Table Generator
 
+![](main.png)
+
 This is a simple tool that generates expereince and treasure tables (Data.txt, XPData.txt, and TreasureTable.txt) for Baldur's Gate 3 in the required format.
 
 ## Requirements
