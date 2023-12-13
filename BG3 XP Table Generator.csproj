@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows7.0</TargetFramework>
     <UseWPF>true</UseWPF>
 	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	<PublishSingleFile>true</PublishSingleFile>
 	<PublishReadyToRun>true</PublishReadyToRun>
 	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+	<ApplicationIcon>xp.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,30 +19,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevExpress.Wpf.Core" Version="23.1.5" />
-    <PackageReference Include="DevExpress.Wpf.Themes.Win11Dark" Version="23.1.5" />
-	<PackageReference Include="DevExpress.Wpf.LayoutControl" Version="23.1.5" />
-	<PackageReference Include="DevExpress.Wpf.Grid" Version="23.1.5" />
-	<PackageReference Include="DevExpress.Wpf.Charts" Version="23.1.5" />
+    <Content Include="xp.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevExpress.Wpf.Core" Version="23.2.2-beta" />
+	<PackageReference Include="DevExpress.Wpf.LayoutControl" Version="23.2.2-beta" />
+	<PackageReference Include="DevExpress.Wpf.Grid" Version="23.2.2-beta" />
+	<PackageReference Include="DevExpress.Wpf.Charts" Version="23.2.2-beta" />
+	<PackageReference Include="DevExpress.Wpf.ThemesLW" Version="23.2.2-beta" />
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="GeneratorData\GeneratorData.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
 
 </Project>

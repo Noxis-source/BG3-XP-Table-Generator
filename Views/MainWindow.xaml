@@ -1,0 +1,190 @@
+﻿<dx:ThemedWindow
+    x:Class="BG3_XP_Table_Generator.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:BG3_XP_Table_Generator.Behaviors"
+    xmlns:converters="clr-namespace:BG3_XP_Table_Generator.Converters"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+    xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:local="clr-namespace:BG3_XP_Table_Generator"
+    xmlns:services="clr-namespace:BG3_XP_Table_Generator.Services"
+    xmlns:viewmodels="clr-namespace:BG3_XP_Table_Generator.ViewModels"
+    Width="1200"
+    Height="1000"
+    Title="Generator"
+    WindowKind="Normal">
+    <dx:ThemedWindow.HeaderItems>
+        <dxb:MainMenuControl>
+            <dxb:BarButtonItem Command="{Binding ShowSettingsCommand}" Content="Settings" />
+        </dxb:MainMenuControl>
+    </dx:ThemedWindow.HeaderItems>
+    <dx:ThemedWindow.DataContext>
+        <viewmodels:MainViewModel />
+    </dx:ThemedWindow.DataContext>
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:FolderBrowserDialogService />
+        <dxmvvm:OpenFileDialogService />
+        <dx:DialogService>
+            <dx:DialogService.DialogStyle>
+                <Style TargetType="dx:ThemedWindow">
+                    <Setter Property="Width" Value="400" />
+                    <Setter Property="Height" Value="300" />
+                </Style>
+            </dx:DialogService.DialogStyle>
+        </dx:DialogService>
+        <services:ExportService />
+    </dxmvvm:Interaction.Behaviors>
+    <dx:DXTabControl>
+        <dx:DXTabItem Header="XP Table">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <dxlc:DataLayoutControl CurrentItem="{Binding XPData}" ItemUpdateSourceTrigger="PropertyChanged">
+                        <dxmvvm:Interaction.Behaviors>
+                            <behaviors:DataLayoutControlGeneratorBehavior />
+                        </dxmvvm:Interaction.Behaviors>
+                    </dxlc:DataLayoutControl>
+                    <dx:SimpleButton
+                        Margin="5"
+                        Command="{Binding GenerateTableCommand}"
+                        Content="Generate" />
+                    <dx:SimpleButton
+                        Margin="5"
+                        Command="{Binding ExportCommand}"
+                        Content="Export" />
+                    <dx:SimpleButton
+                        Margin="5"
+                        Command="{Binding PackCommand}"
+                        Content="Pack"
+                        IsEnabled="{Binding Path=LSLibPath, Source={x:Static local:App.AppSettings}, Converter={dxmvvm:ObjectToBooleanConverter}}" />
+                </StackPanel>
+                <dxg:GridControl Grid.Column="1" ItemsSource="{Binding XPData.XPDataRecords}">
+                    <dxg:GridControl.TotalSummary>
+                        <dxg:GridSummaryItem
+                            DisplayFormat="Total XP: {0}"
+                            FieldName="XP"
+                            ShowInColumn="XP"
+                            SummaryType="Sum" />
+                    </dxg:GridControl.TotalSummary>
+                    <dxg:GridControl.View>
+                        <dxg:TableView
+                            AllowColumnMoving="False"
+                            AllowFilterEditor="False"
+                            AllowGrouping="False"
+                            AllowResizing="False"
+                            AllowSorting="False"
+                            AutoWidth="True"
+                            ColumnFilterPopupMode="Disabled"
+                            EnableImmediatePosting="True"
+                            IsColumnMenuEnabled="False"
+                            IsTotalSummaryMenuEnabled="False"
+                            ShowGroupPanel="False"
+                            ShowIndicator="False"
+                            ShowSearchPanelMode="Never"
+                            TotalSummaryPosition="Bottom">
+                            <dxg:TableView.FormatConditions>
+                                <dxg:ColorScaleFormatCondition ApplyToRow="true" FieldName="XP">
+                                    <dx:ColorScaleFormat ColorMax="#FF8A631A" ColorMin="#FF1D691D" />
+                                </dxg:ColorScaleFormatCondition>
+                            </dxg:TableView.FormatConditions>
+                        </dxg:TableView>
+                    </dxg:GridControl.View>
+                    <dxg:GridColumn AllowEditing="False" FieldName="Level" />
+                    <dxg:GridColumn FieldName="XP" />
+                </dxg:GridControl>
+                <dxc:ChartControl Grid.Row="1" Grid.ColumnSpan="2">
+                    <dxc:ChartControl.Diagram>
+                        <dxc:XYDiagram2D>
+                            <dxc:XYDiagram2D.AxisY>
+                                <dxc:AxisY2D>
+                                    <dxc:AxisY2D.Title>
+                                        <dxc:AxisTitle Content="XP" />
+                                    </dxc:AxisY2D.Title>
+                                </dxc:AxisY2D>
+                            </dxc:XYDiagram2D.AxisY>
+                            <dxc:XYDiagram2D.AxisX>
+                                <dxc:AxisX2D>
+                                    <dxc:AxisX2D.Title>
+                                        <dxc:AxisTitle Content="Level" />
+                                    </dxc:AxisX2D.Title>
+                                </dxc:AxisX2D>
+                            </dxc:XYDiagram2D.AxisX>
+                            <dxc:LineSeries2D
+                                ArgumentDataMember="Level"
+                                Brush="LightSlateGray"
+                                ColorDataMember="XP"
+                                CrosshairLabelPattern="Level {A} - {V} XP"
+                                DataSource="{Binding XPData.XPDataRecords}"
+                                LabelsVisibility="True"
+                                MarkerVisible="True"
+                                ValueDataMember="XP">
+                                <dxc:LineSeries2D.Colorizer>
+                                    <dxc:RangeColorizer Palette="{Binding XPData.XPDataRecords,Converter={converters:ProgressionToGradientConverter}}" RangeStops="{Binding XPData.XPDataRecords, Converter={converters:ProgressionToArrayConverter}}" />
+                                </dxc:LineSeries2D.Colorizer>
+                            </dxc:LineSeries2D>
+                        </dxc:XYDiagram2D>
+                    </dxc:ChartControl.Diagram>
+                </dxc:ChartControl>
+            </Grid>
+        </dx:DXTabItem>
+        <dx:DXTabItem Header="XP Rewards">
+            <Grid>
+                <dxg:TreeListControl Grid.Column="1" ItemsSource="{Binding XPRewardsData.XPRewardsDataRecords}">
+                    <dxg:TreeListControl.View>
+                        <dxg:TreeListView ChildNodesPath="Records" TreeDerivationMode="ChildNodesSelector" />
+                    </dxg:TreeListControl.View>
+                    <dxg:TreeListColumn AllowEditing="False" FieldName="Name" />
+                    <dxg:TreeListColumn AllowEditing="False" FieldName="UUID" />
+                    <dxg:TreeListColumn FieldName="Factor" />
+                    <dxg:TreeListColumn FieldName="Value" />
+                </dxg:TreeListControl>
+            </Grid>
+        </dx:DXTabItem>
+        <dx:DXTabItem Header="Treasure Table">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <dxe:CheckEdit
+                        x:Name="editTableCheck"
+                        MinWidth="150"
+                        Margin="5"
+                        HorizontalContentAlignment="Center"
+                        Content="Allow Editing"
+                        Foreground="DarkRed"
+                        ToolTip="Warning! The table will be exported AS IS" />
+                    <dx:SimpleButton
+                        MinWidth="150"
+                        Margin="5"
+                        Command="{Binding LoadTreasureTableCommand}"
+                        Content="Load"
+                        IsEnabled="{Binding ElementName=editTableCheck, Path=IsChecked}" />
+                    <dx:SimpleButton
+                        MinWidth="150"
+                        Margin="5"
+                        Command="{Binding ResetTreasureTableCommand}"
+                        Content="Reset"
+                        IsEnabled="{Binding ElementName=editTableCheck, Path=IsChecked}" />
+                </StackPanel>
+                <dxe:TextEdit
+                    Grid.Column="1"
+                    EditValue="{Binding XPData.ActualTreasureTable, UpdateSourceTrigger=PropertyChanged}"
+                    IsEnabled="{Binding ElementName=editTableCheck, Path=IsChecked}" />
+            </Grid>
+        </dx:DXTabItem>
+    </dx:DXTabControl>
+</dx:ThemedWindow>

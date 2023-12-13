@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevExpress.Mvvm" Version="23.1.4" />
+    <PackageReference Include="DevExpress.Mvvm" Version="23.2.2-beta" />
   </ItemGroup>
 
 </Project>
